@@ -23,9 +23,21 @@ MinValue =(min(AveMessure))
 print(total,MaxValue,MinValue)
 
 
+datajs={
+   'data': [
+  {
+    'average': total,
+    'Max': MaxValue,
+    'Min': MinValue
+  }
+]
+}
 
-jdata = json.dumps(dataJson)
-with open('dataout.json', 'w') as outfile:
+jdata = json.dumps(datajs)
+
+
+with open ('dataout.json','w') as outfile:
     json.dump(jdata, outfile)
+
 
 print('tengo sueño')
