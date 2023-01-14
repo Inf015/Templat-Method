@@ -27,3 +27,5 @@ print(total,MaxValue,MinValue)
 jdata = json.dumps(dataJson)
 with open('dataout.json', 'w') as outfile:
     json.dump(jdata, outfile)
+
+print('tengo sueño')
