@@ -1,8 +1,8 @@
 <data>
-  <row>
-    <id>1</id>
-    <location>25.5,45.3</location>
-    <date>2023-05-25</date>
-    <meassure>24.5</meassure>
-  </row>
+	<row>
+		<id>1</id>
+		<location>25.5,45.3</location>
+		<date>2023-05-25</date>
+		<meassure>24.5</meassure>
+	</row>
 </data>
