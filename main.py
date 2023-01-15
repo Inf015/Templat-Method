@@ -1,72 +1,110 @@
 import json
+import os
 from xml.dom import minidom
 from abc import ABC, abstractmethod
+import xmltodict
+import pandas
 
 
-class Padre:
+class SuperClass:
     AveMessure = []
 
     def run(self):
         AveMessure = self.leer()
         self.Calc(AveMessure)
 
+    @abstractmethod
     def leer(self):
-        #lectura del json
+        pass
+
+    def Calc(self, AveMessure):
+        n = len(AveMessure)
+        sum = 0
+
+        for i in range(0, len(AveMessure)):
+            sum = sum + AveMessure[i]
+
+        total = sum/len(AveMessure)
+        MaxValue = (max(AveMessure))
+        MinValue = (min(AveMessure))
+
+        print(f'Avg {total}, Max {MaxValue}, Min {MinValue}')
+
+
+class Json(SuperClass):
+    def leer(self):
         AveMessure = []
 
-        with open (r"C:\Users\olive\OneDrive\Documents\GitHub\Templat Method\data.json") as J:
-            dataJson= json.load(J)
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.json'))) as J:
+            dataJson = json.load(J)
 
             for i in dataJson:
-                    AveMessure.append(i['meassure'])
-            print(AveMessure)
-            return AveMessure
+                AveMessure.append(float(i['meassure']))
 
-#     def Calc(self,calc,AveMessure):
-#         AveMessure = []
-
-#         n = len(AveMessure)
-#         total= (n(calc))/calc.len()
-#         MaxValue = (max(calc))
-#         MinValue =(min(calc))
-#         print(total,MaxValue,MinValue)
-
-# p1=Padre()
-# p1.run()
-#p1.Calc() 
-#captura de datos del json
+        print(AveMessure)
+        return AveMessure
 
 
+class Xml(SuperClass):
+    def leer(self):
+        AveMessure = []
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.xml')))as f:
+            data = f.read()
 
+        content = xmltodict.parse(data)['data']['row']
 
+        for i in content:
+            AveMessure.append(float(i['meassure']))
 
-# datajs={
-#    'data': [
-#   {
-#     'average': total,
-#     'Max': MaxValue,
-#     'Min': MinValue
-#   }
-# ]
-# }
+        print(AveMessure)
+        return AveMessure
 
-# jdata = json.dumps(datajs)
+class Flat(SuperClass):
+    def leer(self):
+        AveMessure = []
+        with open(os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.xml')))as f:
+            data = f.read()
 
+        content = xmltodict.parse(data)['data']['row']
 
-# with open ('dataout.json','w') as outfile:
-#     json.dump(jdata, outfile)
-class xml(Padre):
-    def readxml(self):
-        mydoc = minidom.parse('data.xml')
-        items = mydoc.getElementsByTagName('meassure')
+        for i in content:
+            AveMessure.append(float(i['meassure']))
 
-        print('\All attributes:')
-    print(doc.nodeName)
+        print(AveMessure)
+        return AveMessure
 
-    
-    def run(self):
-         self.readxml()
-x1=xml()
-x1.re()
-    
+    def readFile(self):
+        rawFlat = pandas.read_csv(os.path.abspath(os.path.join(os.path.dirname(__file__), 'data.flat')), delimiter=" ", header=None).to_dict()[0]
+        dictionary = []
+        AveMessure = []
+
+        for i in rawFlat:
+            res = {}
+            if (i == 0):
+                names = rawFlat[i].split("|")
+                names = [element.lower() for element in names]
+            else:
+                values = rawFlat[i].split("|")
+
+                for key in names:
+                    for value in values:
+                        res[key] = value
+                        values.remove(value)
+                        break
+
+                dictionary.append(res)
+
+        for i in dictionary:
+            AveMessure.append(float(i['meassure']))
+
+        print (AveMessure)
+        return AveMessure
+# j = Json()
+# j.run()
+
+# x =Xml()
+# x.run()
+
+f = Flat()
+f.run()
 
